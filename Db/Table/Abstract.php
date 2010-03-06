@@ -1,9 +1,6 @@
 <?php
 abstract class Pb_Db_Table_Abstract extends Zend_Db_Table_Abstract
 {
-    protected $_rowClass    = 'Pb_Db_Table_Row';
-    protected $_rowsetClass = 'Pb_Db_Table_Rowset';
-
     protected $_cols;
 
     public function init()
