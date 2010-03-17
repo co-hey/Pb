@@ -4,7 +4,7 @@ require_once('Zend/Db/Table/Row/Abstract.php');
 class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
 {
     protected $_tblNamespace;
-    protected $_cols;
+    protected $_dependents = array();
 
     final public function __construct(array $config=array())
     {
@@ -17,17 +17,10 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
     }
 
     // 渡された連想配列の中からカラム名に一致するものだけを設定する
+    // 既存のRowにsetFromArrayというメソッドがあったので、それを利用する
     public function assign(array $params)
     {
-        if (is_null($this->_cols)) {
-            $this->_cols = $this->getTable()->info(Zend_Db_Table_Abstract::COLS);
-        }
-
-        foreach ($params as $key => $value) {
-            if (in_array($key, $this->_cols)) { $this->{$key} = $value; }
-        }
-
-        return $this;
+        return $this->setFromArray($params);
     }
 
     public function __call($method, $args)
@@ -58,35 +51,59 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
             throw new Zend_Db_Table_Row_Exception('no data');
         }
 
-        if (count($args) != 0) {
-            if ($args[0] instanceof Zend_Db_Select) { $select = $args[0]; }
+        return parent::__call($method, $args);
+    }
+
+    public function createDependentRow($dependentTable, $ruleKey = null)
+    {
+        if (is_string($dependentTable)) {
+            $dependentTable = $this->_getTableFromString($dependentTable);
         }
 
-        // findParentクラス名のマジックメソッド用変換処理
-        if (preg_match("/^findParent(\w+)(?:By(\w+))?$/", $method, $matches)) {
-            $class = $this->_getDbTableClass($matches[1]);
-            $rule  = isset($matches[2]) ? $matches[2] : null;
-            return $this->findParentRow($class, $rule, $select);
+        $map = $this->_prepareReference($dependentTable, $this->_getTable());
+        $row = $dependentTable->createRow();
+
+        $this->_dependents[] = array('row' => $row, 'map' => $map);
+
+        return $row;
+    }
+
+    public function addChild(Zend_Db_Table_Row_Abstract $row)
+    {
+        $map = $this->_prepareReference($row->getTable(), $this->_getTable());
+        $this->_dependents[] = array('row' => $row, 'map' => $map);
+        return $this;
+    }
+
+    public function save()
+    {
+        $ret = parent::save();
+
+        if (count($this->_dependents) == 0) { return $ret; }
+        
+        $adapter = $this->_getTable()->getAdapter();
+        foreach ($this->_dependents as $dependent) {
+            $row = $dependent['row'];
+            $map = $dependent['map'];
+
+            foreach ($map[Zend_Db_Table_Abstract::REF_COLUMNS] as $num => $column) {
+                // カラム名をルールにしたがって整形する(upper,lower等)
+                $column          = $adapter->foldCase($column);
+                $dependentColumn = $adapter->foldCase($map[Zend_Db_Table_Abstract::COLUMNS][$num]);
+
+                $row->{$dependentColumn} = $this->_data[$column];
+            }
+            $row->save();
         }
 
-        // findクラス名Viaクラス名のマジックメソッド用変換処理
-        if (preg_match("/^find(\w+)Via(\w+)(?:By(\w+)(And(\w+))?)?$/", $method, $matches)) {
-            $class    = $this->_getDbTableClass($matches[1]);
-            $viaClass = $this->_getDbTableClass($matches[2]);
-            $rule1    = isset($matches[3]) ? $matches[3] : null;
-            $rule2    = isset($matches[4]) ? $matches[4] : null;
-            return $this->findManyToManyRowset($class, $viaClass, $rule1, $rule2, $select);
-        }
+        return $ret;
+    }
 
-        // findクラス名のマジックメソッド用変換処理
-        if (preg_match("/^find(\w+)(?:By(\w+))?$/", $method, $matches)) {
-            $class = $this->_getDbTableClass($matches[1]);
-            $rule  = isset($matches[2]) ? $matches[2] : null;
-            return $this->findDependentRowset($class, $rule, $select);
-        }
 
-        require_once 'Zend/Db/Table/Row/Exception.php';
-        throw new Zend_Db_Table_Row_Exception("Unrecognized method '$method()'");
+    // クラス名からテーブルクラスを生成する際に、文字列補完機能を付与する
+    protected function _getTableFromString($tableName)
+    {
+        return parent::_getTableFromString($this->_getDbTableClass($tableName));
     }
 
     private function _getDbTableClass($className)
