@@ -5,9 +5,6 @@ class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract
     // $nameは、Helperのクラスprefixなし
     // static定義のメソッドは、Bootstrap等で初期設定を行うことを想定している
 
-    // @var Zend_Loader_PluginLoader_Interface
-    protected static $_pluginLoader;
-
     protected static $_helpers = array();
 
     public static function getPluginLoader()
