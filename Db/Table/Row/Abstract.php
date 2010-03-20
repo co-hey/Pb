@@ -6,6 +6,7 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
     protected $_tblNamespace;
     protected $_dependents = array();
 
+/*
     final public function __construct(array $config=array())
     {
         parent::__construct($config);
@@ -15,6 +16,7 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
             $this->_data = $this->getTable()->createRow()->toArray();
         }
     }
+*/
 
     // 渡された連想配列の中からカラム名に一致するものだけを設定する
     // 既存のRowにsetFromArrayというメソッドがあったので、それを利用する
@@ -23,6 +25,7 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
         return $this->setFromArray($params);
     }
 
+/*
     public function __call($method, $args)
     {
         $matches = array();
@@ -53,6 +56,7 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
 
         return parent::__call($method, $args);
     }
+*/
 
     public function createDependentRow($dependentTable, $ruleKey = null)
     {

@@ -38,6 +38,7 @@ abstract class Pb_Db_Table_Rowset_Abstract extends Zend_Db_Table_Rowset_Abstract
         $this->rewind();    // 位置ポインタを正常に戻す
     }
 
+/*
     public function __construct(array $config)
     {
 
@@ -72,5 +73,6 @@ abstract class Pb_Db_Table_Rowset_Abstract extends Zend_Db_Table_Rowset_Abstract
 
         parent::__construct($config);
     }
+*/
 }
 ?>
