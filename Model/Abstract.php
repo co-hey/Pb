@@ -40,7 +40,7 @@ abstract class Pb_Model_Abstract
             $this->_bootstrap = $this->getFrontController()->getParam('bootstrap');
 
             if (is_null($this->_bootstrap)) {
-                throw new Pb_Model_Helper_Exception("frontController doesn't have bootstrap yet")
+                throw new Pb_Model_Helper_Exception("frontController doesn't have bootstrap yet");
             }
         }
 
