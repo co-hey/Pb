@@ -8,6 +8,10 @@ abstract class Pb_Model_Helper_Abstract implements Pb_Model_Helper_Interface
     {
         if (is_null($this->_bootstrap)) {
             $this->_bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
+
+            if (is_null($this->_bootstrap)) {
+                throw new Pb_Model_Helper_Exception("frontController doesn't have bootstrap yet");
+            }
         }
 
         return $this->_bootstrap;

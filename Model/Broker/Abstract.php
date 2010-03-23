@@ -1,5 +1,7 @@
 <?php
 // Broker基底クラス(Brokerはある種のリソースの読み出しを仲介してくれるクラス)
+// bootstrapはFrontControllerから取得するので、FrontControllerが未作成状態の
+// bootstrapの中では、newで生成できない。
 abstract class Pb_Model_Broker_Abstract implements Pb_Model_Broker_Interface
 {
     // static定義のメソッドは、Bootstrap等で初期設定を行うことを想定している
@@ -63,6 +65,10 @@ abstract class Pb_Model_Broker_Abstract implements Pb_Model_Broker_Interface
     {
         if (is_null($this->_bootstrap)) {
             $this->_bootstrap = Zend_Controller_Front::getInstance()->getParam('bootstrap');
+
+            if (is_null($this->_bootstrap)) {
+                throw new Pb_Model_Helper_Exception("frontController doesn't have bootstrap yet");
+            }
         }
 
         return $this->_bootstrap;

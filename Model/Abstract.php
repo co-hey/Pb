@@ -1,4 +1,6 @@
 <?php
+// bootstrapはFrontControllerから取得するので、FrontControllerが未作成状態の
+// bootstrapの中では、newで生成できない
 abstract class Pb_Model_Abstract
 {
     protected $_frontController;
@@ -36,6 +38,10 @@ abstract class Pb_Model_Abstract
     {
         if (is_null($this->_bootstrap)) {
             $this->_bootstrap = $this->getFrontController()->getParam('bootstrap');
+
+            if (is_null($this->_bootstrap)) {
+                throw new Pb_Model_Helper_Exception("frontController doesn't have bootstrap yet")
+            }
         }
 
         return $this->_bootstrap;
