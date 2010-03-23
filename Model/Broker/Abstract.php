@@ -30,7 +30,7 @@ abstract class Pb_Model_Broker_Abstract implements Pb_Model_Broker_Interface
     {
         $prefix = rtrim($prefix, '_');
         $path   = str_replace('_', DIRECTORY_SEPARATOR, $prefix);
-        self::getPluginLoader()->addPrefixPath($prefix, $path);
+        self::addPath($path, $prefix);
     }
 
     // リソース読み出し元追加(prefix、pathを別に設定)

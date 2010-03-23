@@ -1,10 +1,9 @@
 <?php
-class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract
+class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract implements Pb_Model_Broker_Interface
 {
     // $helperNameは、Helperのクラスフルネーム
     // $nameは、Helperのクラスprefixなし
     // static定義のメソッドは、Bootstrap等で初期設定を行うことを想定している
-
     protected static $_helpers = array();
 
     public static function getPluginLoader()
@@ -19,11 +18,22 @@ class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract
         return self::$_pluginLoader;
     }
 
+    // リソース読み出し元追加(prefixからpathも設定)
+    public static function addPrefix($prefix)
+    {
+        // Pb_Model_Helperクラスの初期設定のため、先にPluginLoaderを生成する
+        // 基底クラスでPluginLoaderが生成されると、Pb_Model_Helperがprefixとして設定されない
+        self::getPluginLoader();
+        parent::addPrefix($prefix);
+    }
+
     // helper読み出し元追加、prefixとpathを別々に追加
     public static function addPath($path, $prefix = 'Pb_Model_Helper')
     {
-        if (is_null($prefix)) { $prefix = 'Pb_Model_Helper'; }
-        parent::addPath($path, $prefix);
+        // Pb_Model_Helperクラスの初期設定のため、先にPluginLoaderを生成する
+        // 基底クラスでPluginLoaderが生成されると、Pb_Model_Helperがprefixとして設定されない
+        self::getPluginLoader();
+        parent::addPrefix($prefix);
     }
 
     // 登録helper追加(予め生成してつっこむときに使う）
@@ -81,6 +91,7 @@ class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract
     protected function _getHelperFullName($name)
     {
         try {
+            var_dump($this->_getLoadClassName($name));
             return self::getPluginLoader()->load($this->_getLoadClassName($name));
         } catch (Zend_Loader_PluginLoader_Exception $e) {
             require_once('Pb/Model/Helper/Exception.php');
