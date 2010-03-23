@@ -91,7 +91,6 @@ class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract implements Pb_Model
     protected function _getHelperFullName($name)
     {
         try {
-            var_dump($this->_getLoadClassName($name));
             return self::getPluginLoader()->load($this->_getLoadClassName($name));
         } catch (Zend_Loader_PluginLoader_Exception $e) {
             require_once('Pb/Model/Helper/Exception.php');
