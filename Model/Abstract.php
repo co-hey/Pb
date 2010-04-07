@@ -19,7 +19,7 @@ abstract class Pb_Model_Abstract
         $this->_init($param1, $param2, $param3, $param4, $param5);
     }
 
-    protected function _init(array $config)
+    protected function _init()
     {
         // 初期化処理するときはこちらで
     }
