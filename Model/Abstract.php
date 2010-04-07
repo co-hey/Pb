@@ -13,8 +13,10 @@ abstract class Pb_Model_Abstract
         $this->_helper  = new Pb_Model_HelperBroker($this);
         $this->_storage = new Zend_Registry();
 
-        $params = func_get_args();
-        $this->_init($params);
+        if (func_num_args() != 0) {
+            list($param1, $param2, $param3, $param4, $param5) = func_get_args();
+        }
+        $this->_init($param1, $param2, $param3, $param4, $param5);
     }
 
     protected function _init(array $config)
