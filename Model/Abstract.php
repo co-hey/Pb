@@ -8,12 +8,13 @@ abstract class Pb_Model_Abstract
     protected $_helper;     // helperブローカー
     protected $_storage;
 
-    final public function __construct(array $config = array())
+    final public function __construct()
     {
         $this->_helper  = new Pb_Model_HelperBroker($this);
         $this->_storage = new Zend_Registry();
 
-        $this->_init($config);
+        $params = func_get_args();
+        $this->_init($params);
     }
 
     protected function _init(array $config)

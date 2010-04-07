@@ -33,7 +33,7 @@ class Pb_Model_HelperBroker extends Pb_Model_Broker_Abstract implements Pb_Model
         // Pb_Model_Helperクラスの初期設定のため、先にPluginLoaderを生成する
         // 基底クラスでPluginLoaderが生成されると、Pb_Model_Helperがprefixとして設定されない
         self::getPluginLoader();
-        parent::addPrefix($prefix);
+        parent::addPath($path, $prefix);
     }
 
     // 登録helper追加(予め生成してつっこむときに使う）
