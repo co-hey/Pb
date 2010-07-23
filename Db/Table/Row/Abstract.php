@@ -7,6 +7,7 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
     protected $_dependents = array();
 
 /*
+    // rowを直接newしないルールとしたので削除
     final public function __construct(array $config=array())
     {
         parent::__construct($config);
@@ -26,6 +27,8 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
     }
 
 /*
+    // rowから、tableのfind系メソッドを使えないルールとしたので削除
+    // 使えるfind系メソッドは親子関係のもののみ
     public function __call($method, $args)
     {
         $matches = array();

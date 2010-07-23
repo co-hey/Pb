@@ -39,6 +39,7 @@ abstract class Pb_Db_Table_Rowset_Abstract extends Zend_Db_Table_Rowset_Abstract
     }
 
 /*
+    // カラムのdefault値を設定するための処理、Zend_Db_Tableの設定でいけたので削除
     public function __construct(array $config)
     {
 
