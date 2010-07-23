@@ -11,7 +11,7 @@ abstract class Pb_Model_Abstract
     final public function __construct()
     {
         $this->_helper  = new Pb_Model_HelperBroker($this);
-        $this->_storage = new Zend_Registry();
+        $this->_storage = Zend_Registry::getInstance(); // singletonとして生成される
 
         if (func_num_args() != 0) {
             list($param1, $param2, $param3, $param4, $param5) = func_get_args();
@@ -40,7 +40,7 @@ abstract class Pb_Model_Abstract
     final protected function _getBootstrap()
     {
         if (is_null($this->_bootstrap)) {
-            $this->_bootstrap = $this->getFrontController()->getParam('bootstrap');
+            $this->_bootstrap = $this->_getFrontController()->getParam('bootstrap');
 
             if (is_null($this->_bootstrap)) {
                 throw new Pb_Model_Helper_Exception("frontController doesn't have bootstrap yet");
