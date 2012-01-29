@@ -6,7 +6,7 @@ class Pb_Controller_Plugin_TemplateSelector extends Zend_Controller_Plugin_Abstr
         $dispatcher = Zend_Controller_Front::getInstance()->getDispatcher();
         $script = array();
 
-        if (($request->getModuleName() != "") 
+        if (($request->getModuleName() != "")
             && ($request->getModuleName() != $dispatcher->getDefaultModule())) {
             $script[] = ':module';
         }

@@ -58,7 +58,7 @@ abstract class Pb_Db_Table_Rowset_Abstract extends Zend_Db_Table_Rowset_Abstract
                 if (in_array(array(null, ""), $pri)) { throw new Zend_Exception('invalid primary key'); }
 
                 // 既存でないprimary keyを含むデータの場合は、保存する
-                if (!in_array($pri, $exists)) { 
+                if (!in_array($pri, $exists)) {
                     $data[]   = $item;      // 精査後データ
                     $exists[] = $pri;       // 既出primary key
                 }

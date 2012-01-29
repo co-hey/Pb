@@ -43,7 +43,7 @@ abstract class Pb_Model_Broker_Abstract implements Pb_Model_Broker_Interface
     {
         return self::$_delimiter;
     }
-    
+
     public static function setDelimiter($delimiter = '_')
     {
         self::$_delimiter = $delimiter;
