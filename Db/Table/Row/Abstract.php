@@ -80,7 +80,7 @@ class Pb_Db_Table_Row_Abstract extends Zend_Db_Table_Row_Abstract
         $ret = parent::save();
 
         if (count($this->_dependents) == 0) { return $ret; }
-        
+
         $adapter = $this->_getTable()->getAdapter();
         foreach ($this->_dependents as $dependent) {
             $row = $dependent['row'];

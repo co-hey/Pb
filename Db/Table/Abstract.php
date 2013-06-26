@@ -25,7 +25,7 @@ abstract class Pb_Db_Table_Abstract extends Zend_Db_Table_Abstract
             }
 
             throw new Zend_Db_Table_Exception('invalid column : ' . $column);
-        } 
+        }
 
         if (preg_match("/^findOneBy(\w+)$/", $method, $matches)) {
             $column = strtolower($matches[1]);
